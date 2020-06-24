@@ -1,43 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { Quote } from './interfaces/quote.interface';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class QuotesService {
-  quotes: Quote[] = [
-    {
-      id: '1',
-      title: 'Impossible is for the unwilling',
-      author: 'John Keats',
-    },
-    {
-      id: '2',
-      title: 'No pressure, no diamonds',
-      author: 'thomas Carlyle',
-    },
-    {
-      id: '3',
-      title: 'My life is my message',
-      author: 'Mahatma Gandhi',
-    },
-  ];
-  getQuotes(): Quote[] {
-    return this.quotes;
+  constructor(
+    @InjectModel('Quote') private readonly quoteModel: Model<Quote>,
+  ) {}
+  async getQuotes(): Promise<Quote[]> {
+    return await this.quoteModel.find().exec();
   }
-  getQuote(id: string): Quote {
-    return this.quotes.find(quote => quote.id === id);
+  async getQuote(id: string): Promise<Quote> {
+    return await this.quoteModel.findById(id).exec();
   }
-  createQuote(quote: Quote) {
-    return quote;
+  async createQuote(quote: Quote): Promise<Quote> {
+    const newQuote = await new this.quoteModel(quote);
+    return newQuote.save();
   }
 
-  updateQuote(id: string, updateQuoteDto): Quote {
-    const data = this.quotes.find(quote => quote.id === id);
-    data.title = updateQuoteDto.title ? updateQuoteDto.title : data.title;
-    data.author = updateQuoteDto.author ? updateQuoteDto.author : data.author;
-    return data;
+  async updateQuote(id: string, updateQuoteDto): Promise<Quote> {
+    return await this.quoteModel.findByIdAndUpdate(id, updateQuoteDto, {
+      new: true,
+    });
   }
 
-  deleteQuote(id: string): Quote {
-    return this.quotes.find(quote => quote.id === id);
+  async deleteQuote(id: string): Promise<any> {
+    return await this.quoteModel.findByIdAndRemove(id);
   }
 }
