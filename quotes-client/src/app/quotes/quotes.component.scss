@@ -1,0 +1,27 @@
+.quotes-card {
+  margin: 2rem;
+}
+
+.avatar {
+  background: #3f51b5;
+  padding-top: 10px;
+  box-sizing: border-box;
+  padding-left: 12px;
+  font-size: 20px;
+  margin-top: -10px;
+  span {
+    color: white;
+    font-weight: inherit;
+  }
+}
+
+.quotes-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media screen and (min-width: 768px) {
+  .quotes-card {
+    width: 600px;
+  }
+}
