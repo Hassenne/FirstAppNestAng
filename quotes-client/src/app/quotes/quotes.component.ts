@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { QuotesService } from "../quotes.service";
+import { Observable } from "rxjs";
+import { Quote } from "../quotes/quote";
 
 @Component({
   selector: "app-quotes",
@@ -6,9 +9,17 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./quotes.component.scss"],
 })
 export class QuotesComponent implements OnInit {
-  constructor() {}
+  quotes: Observable<Quote[]>;
 
-  ngOnInit() {}
+  constructor(private quotesService: QuotesService) {}
+
+  ngOnInit() {
+    this.getData();
+  }
+
+  getData() {
+    this.quotes = this.quotesService.getData();
+  }
 
   getRandomColor() {
     const letters = "0123456789ABCDEF";
@@ -18,5 +29,13 @@ export class QuotesComponent implements OnInit {
     }
 
     return { background: color };
+  }
+
+  onDelete(id) {
+    console.log(id);
+    this.quotesService.deleteQuotes(id).subscribe((data) => {
+      this.getData();
+      console.log("Quotes deleted");
+    });
   }
 }

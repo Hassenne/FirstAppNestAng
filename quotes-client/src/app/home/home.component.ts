@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { QuotesService } from "../quotes.service";
+import { Quote } from "../quotes/quote";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-home",
@@ -6,14 +9,10 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  name = "John Doe";
-  show = true;
+  quote: Observable<Quote>;
+  constructor(private quotesService: QuotesService) {}
 
-  onClick() {
-    this.show = !this.show;
+  ngOnInit() {
+    this.quote = this.quotesService.getQuote("5ef4f79518c7d51e8439fbc2");
   }
-
-  constructor() {}
-
-  ngOnInit() {}
 }
